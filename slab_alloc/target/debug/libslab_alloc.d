@@ -1,0 +1,1 @@
+/home/ubuntu/4A-Securite_Informatique/Rust/project/allocator/slab_alloc/slab_alloc/target/debug/libslab_alloc.rlib: /home/ubuntu/4A-Securite_Informatique/Rust/project/allocator/slab_alloc/slab_alloc/src/lib.rs
