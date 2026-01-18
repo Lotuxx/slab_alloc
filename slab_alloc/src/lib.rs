@@ -27,7 +27,11 @@
 #![no_std]
 
 #[cfg(test)]
-extern crate std;
+mod tests{
+   extern crate std;
+   use std::vec; 
+}
+
 
 
 
