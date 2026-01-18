@@ -20,9 +20,12 @@ extern crate std;
 use core::ptr::null_mut;
 
 #[repr(C)]
+// Ensures predictable layout so the freelist pointer
+// can be stored directly inside freed objects
 struct FreeObject {
     next: *mut FreeObject,
 }
+
 
 // data struct
 pub struct Slab {
