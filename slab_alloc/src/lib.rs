@@ -71,6 +71,14 @@ impl SlabAllocator {
         }
     }
 
+    pub fn free_objects(&self) -> usize {
+        self.slab.free_count
+    }
+
+    pub fn capacity(&self) -> usize {
+        self.slab.capacity
+    }
+
     pub unsafe fn alloc(&mut self) -> Option<*mut u8> {
         if self.slab.freelist.is_null() {
             return None;
@@ -126,5 +134,19 @@ mod tests {
         let c = unsafe { alloc.alloc() }.unwrap();
         assert!(c == a || c == b);
     }
+
+    #[test]
+    fn free_count_updates() {
+        let mut buffer = vec![0u8; 256];
+        let mut alloc = unsafe {
+            SlabAllocator::new(buffer.as_mut_ptr(), 256, 32)
+        };
+
+        assert_eq!(alloc.free_objects(), alloc.capacity());
+
+        let _a = unsafe { alloc.alloc() }.unwrap();
+        assert_eq!(alloc.free_objects(), alloc.capacity() - 1);
+    }
+
 }
 
