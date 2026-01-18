@@ -57,4 +57,61 @@ impl SlabAllocator {
             },
         }
     }
+
+    pub unsafe fn alloc(&mut self) -> Option<*mut u8> {
+        if self.slab.freelist.is_null() {
+            return None;
+        }
+
+        let obj = self.slab.freelist;
+        self.slab.freelist = (*obj).next;
+        self.slab.free_count -= 1;
+
+        Some(obj as *mut u8)
+    }
+
+    /* Deallocate an object back into the slab
+    
+    # Safety
+    - `ptr` must have been allocated by this allocator
+     - Double free is undefined behavior
+    */
+    pub unsafe fn dealloc(&mut self, ptr: *mut u8) {
+        let obj = ptr as *mut FreeObject;
+        (*obj).next = self.slab.freelist;
+        self.slab.freelist = obj;
+        self.slab.free_count += 1;
+    }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn alloc_and_free() {
+        const BUF_SIZE: usize = 1024;
+        const OBJ_SIZE: usize = 32;
+
+        let mut buffer = vec![0u8; BUF_SIZE];
+
+        let mut alloc = unsafe {
+            SlabAllocator::new(buffer.as_mut_ptr(), BUF_SIZE, OBJ_SIZE)
+        };
+
+        let a = unsafe { alloc.alloc() }.unwrap();
+        let b = unsafe { alloc.alloc() }.unwrap();
+
+        assert_ne!(a, b);
+
+        unsafe {
+            alloc.dealloc(a);
+            alloc.dealloc(b);
+        }
+
+        let c = unsafe { alloc.alloc() }.unwrap();
+        assert!(c == a || c == b);
+    }
+}
+
