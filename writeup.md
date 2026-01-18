@@ -17,3 +17,13 @@ target in kernel exploitation.
 ## Relation to this project
 This Rust implementation mimics SLUB’s freelist-in-object design but omits
 advanced features such as per-CPU slabs and page allocators.
+
+## Limitations
+This allocator does not implement:
+- Per-CPU slabs
+- NUMA awareness
+- Slab growth or shrinking
+- Memory poisoning or debugging features
+
+These features are present in the Linux SLUB allocator but were omitted
+to keep the implementation minimal and educational.
