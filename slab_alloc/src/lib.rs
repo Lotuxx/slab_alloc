@@ -85,6 +85,9 @@ impl SlabAllocator {
         }
 
         let obj = self.slab.freelist;
+
+        // SAFETY: freelist pointer is guaranteed to point to a valid object
+        // created during slab initialization.
         self.slab.freelist = (*obj).next;
         self.slab.free_count -= 1;
 
