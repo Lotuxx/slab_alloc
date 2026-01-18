@@ -1,3 +1,16 @@
+/*
+# Minimal slab allocator for educational purposes.
+#
+### Safety
+# This allocator uses raw pointers and manual memory management.
+# Callers must ensure:
+# - Memory passed to the allocator is valid and writable
+# - Objects are not used after deallocation
+# - No double-free occurs
+*/
+
+
+
 #![no_std]
 
 #[cfg(test)]
