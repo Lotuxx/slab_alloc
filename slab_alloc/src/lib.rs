@@ -1,3 +1,17 @@
+//INSTRUCTION
+/* 
+#Create a slab allocator over a fixed memory region
+#
+### Safety
+# - `buffer` must be valid and writable for `buffer_size`
+# - `object_size` must be >= size of a pointer
+# - The memory must not be used elsewhere while allocator is alive 
+*/
+
+
+
+
+//UNSAFE
 //! Minimal slab allocator for educational purposes.
 //!
 //! # Safety
